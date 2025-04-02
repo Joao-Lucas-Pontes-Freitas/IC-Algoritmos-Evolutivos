@@ -1,4 +1,3 @@
-# algorithms.py
 import random
 import statistics
 from models import Tarefa, Workflow, VM
