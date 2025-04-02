@@ -1,8 +1,9 @@
 import time
 import statistics
 from benchmarks import gerar_cenarios_benchmark
+from PSO import pso, Particle
 from algorithms import (
-    ga, pso, ga_pso_hibrido, gerar_individuo,
+    ga, ga_pso_hibrido, gerar_individuo,
     Particula, obter_gbest, simular_workflow, calcula_fitness, Individuo
 )
 from models import VM
@@ -35,14 +36,15 @@ def executar_experimento_pso(workflow, vms, pop_size, iteracoes_total, num_execu
     num_vms = len(vms)
     for _ in range(num_execucoes):
         vms_exec = [VM(vm.id, vm.mips, vm.custo) for vm in vms]
-        pop_particulas = [Particula(gerar_individuo(num_tarefas, num_vms)) for _ in range(pop_size)]
+        pop_particulas = [Particle(gerar_individuo(num_tarefas, num_vms)) for _ in range(pop_size)]
         inicio = time.time()
-        pop_particulas = pso(pop_particulas, workflow, vms_exec, iteracoes_total, C1=1.0, C2=1.1)
+        gbest, fitness = pso(pop_particulas, workflow, vms_exec, iteracoes_total)
+        # pop_particulas = pso(pop_particulas, workflow, vms_exec, iteracoes_total)
         fim = time.time()
         tempos_execucao.append(fim - inicio)
-        gbest, _ = obter_gbest(pop_particulas)
+        # gbest, _ = obter_gbest(pop_particulas)
         makespan, custo_total, balanceamento = simular_workflow(gbest, workflow, vms_exec)
-        fitness = calcula_fitness(gbest, workflow, vms_exec)
+        # fitness = calcula_fitness(gbest, workflow, vms_exec)
         resultados.append((makespan, custo_total, balanceamento, fitness))
     media_resultados = [statistics.mean([r[i] for r in resultados]) for i in range(4)]
     media_tempo = statistics.mean(tempos_execucao)
