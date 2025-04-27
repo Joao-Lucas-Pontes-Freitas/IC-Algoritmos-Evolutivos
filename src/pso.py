@@ -9,7 +9,7 @@ def pso(jobs, seed):
     ops = [j for j in range(len(jobs)) for _ in range(len(jobs[j]))]
 
     populacao = 100
-    iters = 100
+    iters = 10000
     w_max, w_min = 0.9, 0.4
     c1 = c2 = 2.0
 
