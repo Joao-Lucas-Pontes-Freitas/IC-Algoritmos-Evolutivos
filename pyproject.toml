@@ -1,0 +1,10 @@
+[project]
+name = "ga-pso"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "job-shop-lib>=1.0.4",
+    "numpy>=1.26.4",
+]
