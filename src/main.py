@@ -8,27 +8,33 @@ from pso import pso
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compare GA vs PSO on JSSP benchmarks")
-    parser.add_argument(
-        "--instance", default="ft06", help="nome do benchmark (e.g., abz7)"
-    )
-    parser.add_argument(
-        "--seed", type=int, default=42, help="semente para aleatoriedade"
-    )
-    args = parser.parse_args()
+    benchmarks = ["abz5", "abz6", "abz7", "abz8", "abz9", "ft06", "ft10", "ft20", "yn1", "yn2", "yn3", "yn4"]
+    print('-' * 30)
+    print()
 
-    jobs = load_instance(args.instance.lower())
+    for benchmark in benchmarks:
+        
+        print(f"Executando benchmark: {benchmark}")
+        
+        jobs = load_instance(benchmark)
 
-    experimentos = 30
-    resultados_pso = np.zeros(experimentos)
+        seed = 42
+        experimentos = 1
+        resultados_pso = np.zeros(experimentos)
 
-    for i in range(experimentos):
-        pso_val = pso(jobs, args.seed + i)
-        resultados_pso[i] = pso_val
+        for i in range(experimentos):
+            pso_val = pso(jobs, seed + i)
+            resultados_pso[i] = pso_val
 
-    print("PSO: ", np.mean(resultados_pso))
-    print("PSO Melhor: ", np.min(resultados_pso))
-    print("PSO Pior: ", np.max(resultados_pso))
+        print("PSO - Média: ", np.mean(resultados_pso))
+        print("PSO - Melhor: ", np.min(resultados_pso))
+        print("PSO - Pior: ", np.max(resultados_pso))
+        print()
+        print("GA - Média: ", np.mean(resultados_pso))
+        print("GA - Melhor: ", np.min(resultados_pso))
+        print("GA - Pior: ", np.max(resultados_pso))
+        print('-' * 30)
+        print()
 
 
 if __name__ == "__main__":
