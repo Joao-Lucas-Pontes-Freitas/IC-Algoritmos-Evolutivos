@@ -1,6 +1,7 @@
 import numpy as np
 import random
 
+from collections import Counter
 from benchmark import decode, load_instance
 
 class IndividuoGA:
@@ -23,41 +24,35 @@ def selecao_torneio(pop, tamanho=3):
 
 def order_crossover(p1: list, p2: list) -> list:
     """
-    Order Crossover (OX) para permutações:
-    - Seleciona dois pontos de corte i<j.
-    - Copia p1[i:j] para o filho.
-    - Preenche o restante em ordem de p2, rodando em círculo.
+    One-point Order Crossover (OX) adaptado para permutações com elementos repetidos:
+    - Seleciona um índice de corte `cut` (>0, <len(p1)).
+    - Copia p1[0:cut] para o filho.
+    - Calcula o multiconjunto de genes faltantes (diferença de contagens entre p1 e prefixo copiado).
+    - Preenche child[cut:] usando a ordem de p2, sem ultrapassar o número de ocorrências de cada gene.
     """
     D = len(p1)
-    index = np.random.randint(0, len(p1))
-    
-    child = [] * D
-    child[:index] = p1[:index]
+    cut = np.random.randint(1, D)
 
-    faltando = np.array([])
+    child = [None] * D
+    child[:cut] = p1[:cut]
 
-    unique, counts = np.unique(p1, return_counts=True)
+    cnt_p1 = Counter(p1)
+    cnt_prefix = Counter(child[:cut])
 
-    faltando = []
-    for gene, total in zip(unique, counts):
-        # quantas vezes o gene já apareceu em 'child' (ignorando None)
-        presente = child.count(gene)
-        # quantas cópias faltam
-        missing = total - presente
-        if missing > 0:
-            # adiciona 'missing' cópias do gene à lista de faltantes
-            faltando.extend([gene] * missing)
+    missing = []
+    for gene, total in cnt_p1.items():
+        needed = total - cnt_prefix.get(gene, 0)
+        missing.extend([gene] * needed)
 
-    # se precisar como numpy array:
-    faltando = np.array(faltando, dtype=int)
+    pos = cut
+    for gene in p2:
+        if gene in missing:
+            child[pos] = gene
+            missing.remove(gene)
+            pos += 1
+            if pos >= D:
+                break
 
-    pos = index
-    for gene in faltando:
-        if pos >= D:
-            pos = 0
-        child[pos] = gene
-        pos += 1
-    
     return child
 
 def crossover(ind1, ind2, jobs):
@@ -110,31 +105,5 @@ def ga(jobs, seed, pop_size=100, iters=100):
             nova_pop.append(filho)
         populacao = nova_pop
     melhor = min(populacao, key=lambda ind: ind.fitness)
-    return melhor
-
-ga(load_instance("abz5"), 42)   
-
-
-
-# benchmarks = ["abz5", "abz6", "abz7", "abz8", "abz9", "ft06", "ft10", "ft20", "yn1", "yn2", "yn3", "yn4"]
-# print('-' * 30)
-# print()
-
-# for benchmark in benchmarks:
-#     print(f"Executando benchmark: {benchmark}")
     
-#     jobs = load_instance(benchmark)
-
-#     seed = 42
-#     experimentos = 1
-#     resultados_ga = np.zeros(experimentos)
-
-#     for i in range(experimentos):
-#         ga_val = ga(jobs, seed + i)
-#         resultados_ga[i] = ga_val.fitness
-
-#     print("GA - Média: ", np.mean(resultados_ga))
-#     print("GA - Melhor: ", np.min(resultados_ga))
-#     print("GA - Pior: ", np.max(resultados_ga))
-#     print('-' * 30)
-#     print()
+    return melhor.fitness
