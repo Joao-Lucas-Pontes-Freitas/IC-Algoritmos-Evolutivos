@@ -76,182 +76,62 @@ def decode(jobs, seq):
 
     return max(jfin)
 
-def random_seq(jobs):
-    seq = [j for j in range(len(jobs)) for _ in range(len(jobs[j]))]
-    random.shuffle(seq)
-    return seq
-
-def ox(p1, p2):
-    n = len(p1)
-    a, b = sorted(random.sample(range(n), 2))
-    child = [None] * n
-    child[a:b] = p1[a:b]
-
-    total = {}
-    for x in p1: total[x] = total.get(x, 0) + 1
-    seg = {}
-    for x in p1[a:b]: seg[x] = seg.get(x, 0) + 1
-    missing = {j: total[j] - seg.get(j, 0) for j in total}
-
-    fill = []
-    for x in p2:
-        if missing.get(x, 0) > 0:
-            fill.append(x)
-            missing[x] -= 1
-
-    idx = 0
-    for i in range(n):
-        if child[i] is None:
-            child[i] = fill[idx]
-            idx += 1
-
-    return child
-
-def pmx(p1, p2):
-    n = len(p1)
-    a, b = sorted(random.sample(range(n), 2))
-    child = [None] * n
-    child[a:b] = p1[a:b]
-
-    total = {}
-    for x in p1: total[x] = total.get(x, 0) + 1
-    seg = {}
-    for x in p1[a:b]: seg[x] = seg.get(x, 0) + 1
-    missing = {j: total[j] - seg.get(j, 0) for j in total}
-
-    fill = []
-    for x in p2:
-        if missing.get(x, 0) > 0:
-            fill.append(x)
-            missing[x] -= 1
-
-    idx = 0
-    for i in range(n):
-        if child[i] is None:
-            child[i] = fill[idx]
-            idx += 1
-
-    return child
-
-def pox(p1, p2):
-    n = len(p1)
-    mask = [random.random() < 0.5 for _ in range(n)]
-    child = [p1[i] if mask[i] else None for i in range(n)]
-
-    total = {}
-    for x in p1: total[x] = total.get(x, 0) + 1
-    seg = {}
-    for i, use in enumerate(mask):
-        if use:
-            seg[p1[i]] = seg.get(p1[i], 0) + 1
-    missing = {j: total[j] - seg.get(j, 0) for j in total}
-
-    fill = []
-    for x in p2:
-        if missing.get(x, 0) > 0:
-            fill.append(x)
-            missing[x] -= 1
-
-    idx = 0
-    for i in range(n):
-        if child[i] is None:
-            child[i] = fill[idx]
-            idx += 1
-
-    return child
-
-def ga(jobs, seed):
-    random.seed(seed)
-    np.random.seed(seed)
-
-    pop_size = 100
-    gens = 100
-    mut_rate = 0.3
-
-    pop = [random_seq(jobs) for _ in range(pop_size)]
-    best = min(pop, key=lambda s: decode(jobs, s))
-    best_val = decode(jobs, best)
-
-    for g in range(gens):
-        new_pop = []
-        for _ in range(pop_size // 2):
-            def select_one():
-                a, b = random.sample(pop, 2)
-                return a if decode(jobs, a) < decode(jobs, b) else b
-
-            p1 = select_one()
-            p2 = select_one()
-            cx = random.choice([ox, pmx, pox])
-            for parent in ((p1, p2), (p2, p1)):
-                child = cx(*parent)
-                if random.random() < mut_rate:
-                    i, j = random.sample(range(len(child)), 2)
-                    child[i], child[j] = child[j], child[i]
-                new_pop.append(child)
-
-        pop = new_pop
-        if g % 50 == 49:
-            for ind in pop:
-                for _ in range(20):
-                    i, j = sorted(random.sample(range(len(ind)), 2))
-                    ind[i:j] = list(reversed(ind[i:j]))
-
-        current = min(pop, key=lambda s: decode(jobs, s))
-        current_val = decode(jobs, current)
-        if current_val < best_val:
-            best, best_val = current, current_val
-
-    return int(best_val)
-
 def pso(jobs, seed):
     random.seed(seed)
     np.random.seed(seed)
 
-    n_ops = sum(len(job) for job in jobs)
+    numero_tarefas = sum(len(job) for job in jobs)
     ops = [j for j in range(len(jobs)) for _ in range(len(jobs[j]))]
 
-    part = 50
-    iters = 1000
+    populacao = 100
+    iters = 10000
     w_max, w_min = 0.9, 0.4
     c1 = c2 = 2.0
-    mut_prob = 0.05
 
-    pos = np.random.rand(part, n_ops)
-    vel = np.random.rand(part, n_ops) - 0.5
+    particulas = np.random.rand(populacao, numero_tarefas)
+    vel = np.random.uniform(-0.2, 0.2, (populacao, numero_tarefas))
 
     def eval_particle(p):
         seq = [op for _, op in sorted(zip(p, ops))]
         return decode(jobs, seq)
 
-    pbest = pos.copy()
+    pbest = particulas.copy()
     pbest_vals = np.array([eval_particle(p) for p in pbest])
+
     best_idx = pbest_vals.argmin()
     gbest = pbest[best_idx].copy()
+    
     gbest_val = pbest_vals[best_idx]
 
     for t in range(iters):
-        w = w_max - (w_max - w_min) * (t / iters) ** 2
-        r1 = np.random.rand(part, n_ops)
-        r2 = np.random.rand(part, n_ops)
+        w = w_max - ((t * (w_max - w_min)) / iters) * np.sin((t*np.pi) / (2*iters))
+        r1 = np.random.rand(populacao, numero_tarefas)
+        r2 = np.random.rand(populacao, numero_tarefas)
 
-        vel = w * vel + c1 * r1 * (pbest - pos) + c2 * r2 * (gbest - pos)
-        pos = pos + vel
+        vel = w * vel + c1 * r1 * (pbest - particulas) + c2 * r2 * (gbest - particulas)
+        particulas = particulas + vel
 
-        mask = np.random.rand(part) < mut_prob
-        noise = np.random.normal(0, 1, size=pos[mask].shape)
-        pos[mask] += noise
+        noise = np.random.normal(0, 1, particulas.shape)
+        mutaded = particulas + noise
 
-        vals = np.array([eval_particle(p) for p in pos])
+        fitness_atual = np.array([eval_particle(p) for p in particulas])
+        fitness_novo = np.array([eval_particle(p) for p in mutaded])
+
+        particulas[fitness_novo < fitness_atual] = mutaded[fitness_novo < fitness_atual]
+
+        vals = np.array([eval_particle(p) for p in particulas])
         better = vals < pbest_vals
-        pbest[better] = pos[better]
+
+        pbest[better] = particulas[better]
         pbest_vals[better] = vals[better]
 
         idx_min = pbest_vals.argmin()
+
         if pbest_vals[idx_min] < gbest_val:
             gbest = pbest[idx_min].copy()
             gbest_val = pbest_vals[idx_min]
 
-    return int(gbest_val)
+    return gbest_val
 
 def main():
     parser = argparse.ArgumentParser(description="Compare GA vs PSO on JSSP benchmarks")
@@ -261,19 +141,13 @@ def main():
 
     jobs = load_instance(args.instance.lower())
 
-    experimentos = 30
-    resultados_ga = np.zeros(experimentos)
+    experimentos = 1
     resultados_pso = np.zeros(experimentos)
 
     for i in range(experimentos):
-        ga_val = ga(jobs, args.seed + i)
         pso_val = pso(jobs, args.seed + i)
-        resultados_ga[i] = ga_val
         resultados_pso[i] = pso_val
  
-    print("GA: ", np.mean(resultados_ga))
-    print("GA Melhor: ", np.min(resultados_ga))
-    print("GA Pior: ", np.max(resultados_ga))
     print("PSO: ", np.mean(resultados_pso))
     print("PSO Melhor: ", np.min(resultados_pso))
     print("PSO Pior: ", np.max(resultados_pso))
