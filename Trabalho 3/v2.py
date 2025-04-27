@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-# Title: A Modified Genetic Algorithm with Local Search Strategies and Multi-Crossover Operator for Job Shop Scheduling Problem
-# Link: https://www.mdpi.com/1424-8220/20/18/5440
 # Title: A Hybrid Particle Swarm Optimization Algorithm Enhanced with Nonlinear Inertial Weight and Gaussian Mutation for Job Shop Scheduling Problems
 # Link: https://www.mdpi.com/2227-7390/8/8/1355
 
