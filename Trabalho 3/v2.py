@@ -255,18 +255,24 @@ def pso(jobs, seed):
 
 def main():
     parser = argparse.ArgumentParser(description="Compare GA vs PSO on JSSP benchmarks")
-    parser.add_argument("--instance", default="abz7", help="nome do benchmark (e.g., abz7)")
+    parser.add_argument("--instance", default="ft06", help="nome do benchmark (e.g., abz7)")
     parser.add_argument("--seed", type=int, default=42, help="semente para aleatoriedade")
     args = parser.parse_args()
 
     jobs = load_instance(args.instance.lower())
 
-    resultados_ga = np.zeros(30)
-    resultados_pso = np.zeros(30)
-    experimentos = 2
+    experimentos = 30
+    resultados_ga = np.zeros(experimentos)
+    resultados_pso = np.zeros(experimentos)
 
     for i in range(experimentos):
         ga_val = ga(jobs, args.seed + i)
         pso_val = pso(jobs, args.seed + i)
         resultados_ga[i] = ga_val
-        resultados
+        resultados_pso[i] = pso_val
+ 
+    print("GA: ", np.mean(resultados_ga))
+    print("PSO: ", np.mean(resultados_pso))
+
+if __name__ == "__main__":
+    main()
