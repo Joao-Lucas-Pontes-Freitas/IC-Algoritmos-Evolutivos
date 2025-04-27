@@ -272,7 +272,11 @@ def main():
         resultados_pso[i] = pso_val
  
     print("GA: ", np.mean(resultados_ga))
+    print("GA Melhor: ", np.min(resultados_ga))
+    print("GA Pior: ", np.max(resultados_ga))
     print("PSO: ", np.mean(resultados_pso))
+    print("PSO Melhor: ", np.min(resultados_pso))
+    print("PSO Pior: ", np.max(resultados_pso))
 
 if __name__ == "__main__":
     main()
