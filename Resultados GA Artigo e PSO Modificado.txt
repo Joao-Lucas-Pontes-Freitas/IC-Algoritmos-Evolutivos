@@ -1,0 +1,105 @@
+Resultados GA Artigo e PSO Modificado
+
+------------------------------
+
+Executando benchmark: abz5
+PSO - Media:  1318.1
+PSO - Melhor:  1264.0
+PSO - Pior:  1384.0
+
+GA - Media:  1593.0
+GA - Melhor:  1441.0
+GA - Pior:  1954.0
+------------------------------
+
+Executando benchmark: abz6
+PSO - Media:  1004.3666666666667
+PSO - Melhor:  967.0
+PSO - Pior:  1061.0
+
+GA - Media:  1241.1333333333334
+GA - Melhor:  1092.0
+GA - Pior:  1443.0
+------------------------------
+
+Executando benchmark: abz7
+PSO - Media:  885.2333333333333
+PSO - Melhor:  821.0
+PSO - Pior:  959.0
+
+GA - Media:  1090.1333333333334
+GA - Melhor:  985.0
+GA - Pior:  1233.0
+------------------------------
+
+Executando benchmark: abz8
+PSO - Media:  915.9333333333333
+PSO - Melhor:  842.0
+PSO - Pior:  993.0
+
+GA - Media:  1191.9
+GA - Melhor:  1054.0
+GA - Pior:  1398.0
+------------------------------
+
+Executando benchmark: abz9
+PSO - Media:  921.9
+PSO - Melhor:  863.0
+PSO - Pior:  1019.0
+
+GA - Media:  1156.9333333333334
+GA - Melhor:  1069.0
+GA - Pior:  1335.0
+------------------------------
+
+Executando benchmark: ft06
+PSO - Media:  55.0
+PSO - Melhor:  55.0
+PSO - Pior:  55.0
+
+GA - Media:  63.63333333333333
+GA - Melhor:  58.0
+GA - Pior:  74.0
+------------------------------
+
+Executando benchmark: ft10
+PSO - Media:  1036.5
+PSO - Melhor:  996.0
+PSO - Pior:  1128.0
+
+GA - Media:  1397.8333333333333
+GA - Melhor:  1253.0
+GA - Pior:  1552.0
+------------------------------
+
+Executando benchmark: ft20
+PSO - Media:  1319.0666666666666
+PSO - Melhor:  1254.0
+PSO - Pior:  1413.0
+
+GA - Media:  1417.8333333333333
+GA - Melhor:  1279.0
+GA - Pior:  1525.0
+------------------------------
+
+Executando benchmark: yn1
+PSO - Media:  1254.8
+PSO - Melhor:  1145.0
+PSO - Pior:  1353.0
+
+GA - Media:  1605.9333333333334
+GA - Melhor:  1434.0
+GA - Pior:  1886.0
+------------------------------
+
+Executando benchmark: yn2
+PSO - Media:  1298.1
+PSO - Melhor:  1206.0
+PSO - Pior:  1362.0
+
+GA - Media:  1634.7
+GA - Melhor:  1473.0
+GA - Pior:  1757.0
+------------------------------
+
+

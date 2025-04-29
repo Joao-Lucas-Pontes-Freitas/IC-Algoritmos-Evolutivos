@@ -1,0 +1,45 @@
+Resultados PSO Artigo 30 experimentos
+
+------------------------------
+
+Executando benchmark: ft06
+
+PSO - Média:  55.0
+PSO - Melhor: 55.0
+PSO - Pior:   55.0
+
+------------------------------
+
+Executando benchmark: ft10
+
+PSO - Média:  1130.6333333333334
+PSO - Melhor: 1078.0
+PSO - Pior:   1170.0
+
+------------------------------
+
+Executando benchmark: ft20
+
+PSO - Média:  1427.2333333333333
+PSO - Melhor: 1348.0
+PSO - Pior:   1469.0
+
+------------------------------
+
+Executando benchmark: abz5
+
+PSO - Média:  1382.1333333333334
+PSO - Melhor: 1322.0
+PSO - Pior:   1426.0
+
+------------------------------
+
+Executando benchmark: abz6
+
+PSO - Média:  1052.0666666666666
+PSO - Melhor: 992.0
+PSO - Pior:   1076.0
+
+------------------------------
+
+Executando benchmark: abz7
