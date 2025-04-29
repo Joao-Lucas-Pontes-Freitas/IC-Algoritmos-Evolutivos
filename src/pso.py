@@ -37,7 +37,7 @@ def pso(jobs, seed):
         particulas = particulas + vel
 
         noise = np.random.normal(0, 1, particulas.shape)
-        mutaded = particulas + noise
+        mutaded = particulas + particulas * noise
 
         fitness_atual = np.array([eval_particle(p) for p in particulas])
         fitness_novo = np.array([eval_particle(p) for p in mutaded])
